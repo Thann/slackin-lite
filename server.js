@@ -5,6 +5,7 @@ var options = {
   api_token: "",
   port: 3000,
   invite_path: "/",
+  cors_domain: "*",
   // msg_channel: false,  // set a channel name to message whenever a new user joins
 }
 
@@ -54,14 +55,16 @@ app.post(options.invite_path, function(req, res) {
     });
     p_res.on('end', function() {
       var p_body = JSON.parse(body)
+      res.setHeader('Access-Control-Allow-Origin', options.cors_domain);
+      res.setHeader('Access-Control-Allow-Method', 'POST OPTIONS');
       if (p_body.ok || p_body.error === 'already_in_team' || p_body.error === 'already_invited') {
         res.writeHead(200);
-        res.write('invite sent')
+        res.write('invite sent');
         res.end();
       } else {
         // console.log("ERROR:", p_body.error, p_body.warning)
         res.writeHead(400);
-        res.write(body)
+        res.write(body);
         res.end();
       }
     });

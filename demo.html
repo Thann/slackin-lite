@@ -8,5 +8,26 @@
       <input type="text" name="email" placeholder="email">
       <button type="submit">Request Invite</button>
     </form>
+    <button id="ajax"> AJAX </button>
+    <div id="msg"></div>
   </body>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script>
+    $('#ajax').click(function() {
+      $('#msg').text("loading...");
+      $.ajax({
+        url: 'http://localhost:3000',
+        data: {email: $('input').val()},
+        method: "POST",
+        complete: function(resp, status) {
+          var msg = resp.responseText;
+          try {
+            msg = JSON.parse(resp.responseText).error;
+          } catch(e) {}
+          $('#msg').text(msg);
+        },
+      });
+    });
+
+  </script>
 </html>
