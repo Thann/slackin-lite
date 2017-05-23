@@ -1,0 +1,10 @@
+{
+  "name": "slackin-lite",
+  "version": "0.0.1",
+  "description": "Simple API to invite users to your slack channel. Similar to 'slackin' but without all the bullshit",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "querystring": "^0.2.0"
+  }
+}
