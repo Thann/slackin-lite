@@ -5,6 +5,7 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "node-getopt": "^0.2.3",
     "querystring": "^0.2.0"
   }
 }

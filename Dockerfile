@@ -1,14 +1,15 @@
 FROM node:alpine
+EXPOSE 3000
+ENTRYPOINT [ "node", "server" ]
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-# Bundle app source
-COPY server.js package.json /usr/src/app/
-
 # Install app dependencies
+COPY package.json /usr/src/app/
 RUN npm install
 
-EXPOSE 3000
-CMD [ "node", "server" ]
+# Bundle app source
+COPY server.js /usr/src/app/
+

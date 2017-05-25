@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  slackin:
+    image: thann/slackin-lite
+    command: -o org-name -t api-token
+    ports:
+      - "3000:3000"
+

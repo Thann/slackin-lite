@@ -1,22 +1,41 @@
 'use strict';
 
+var app = require('express')();
+var https = require('https');
+var qs = require('querystring');
+
 var options = {
-  org_name: "",
-  api_token: "",
+  org: "",
+  token: "",
   port: 3000,
   invite_path: "/",
   cors_domain: "*",
   // msg_channel: false,  // set a channel name to message whenever a new user joins
 }
 
-if (!options.org_name.length || !options.api_token) {
-  console.log("ERROR: must set org_name and api_token options...");
-  return;
+var getopts = require("node-getopt").create([
+	['t', 'token=', 'Slack admin api token'],
+	['o', 'org=',   'Slack organization name (sub-domain)'],
+	['p', 'port=',  'Set listen port'],
+	['c', 'cors=',  'Set Access-Control-Allow-Origin header'],
+	['h', 'help',   '']
+]).bindHelp();
+var opt = getopts.parseSystem();
+
+if (opt.argv.length > 0) {
+  console.error("ERROR: Unexpected argument(s): " + opt.argv.join(', '));
+  console.error(getopts.getHelp());
+  process.exit(1);
 }
 
-var app = require('express')();
-var https = require('https');
-var qs = require('querystring');
+// Merge opts into options
+for (var attrname in opt.options) { options[attrname] = opt.options[attrname]; }
+
+if (!options.org || !options.token) {
+  console.error("ERROR: must set org and token options...");
+  console.error(getopts.getHelp());
+  process.exit(1);
+}
 
 // Load middleware
 app.use(require('body-parser').urlencoded({extended: false}));
@@ -31,13 +50,13 @@ app.post(options.invite_path, function(req, res) {
 
   var post_data = qs.stringify({
     email: req.body.email,
-    token: options.api_token,
+    token: options.token,
     set_active: true,
   });
 
   var post_opts = {
     method: 'POST',
-    host: options.org_name + '.slack.com',
+    host: options.org + '.slack.com',
     path: '/api/users.admin.invite?'+post_data,
   }
 
